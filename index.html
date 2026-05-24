@@ -1,0 +1,2811 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>정훈 자산</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3182F6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="정훈 자산">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard+Variable&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg: #F2F4F6;
+  --surface: #FFFFFF;
+  --surface-2: #F9FAFB;
+  --text: #191F28;
+  --text-2: #4E5968;
+  --text-3: #8B95A1;
+  --text-4: #B0B8C1;
+  --line: #E5E8EB;
+  --line-2: #F2F4F6;
+  --blue: #3182F6;
+  --blue-soft: #E8F3FF;
+  --blue-dark: #1B64DA;
+  --green: #00C896;
+  --green-soft: #E6F9F2;
+  --red: #F04452;
+  --red-soft: #FEECEE;
+  --orange: #FF9500;
+  --orange-soft: #FFF4E5;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.3px;
+  min-height: 100vh;
+}
+
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, select { font-family: inherit; color: inherit; }
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--bg);
+  min-height: 100vh;
+  padding-bottom: 100px;
+  position: relative;
+}
+
+/* ===== HEADER ===== */
+.header {
+  background: var(--bg);
+  padding: 16px 20px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-2);
+  font-size: 16px;
+  transition: background 0.15s;
+}
+
+.icon-btn:active { background: var(--line); }
+
+/* ===== TABS ===== */
+.tabs {
+  display: flex;
+  background: var(--bg);
+  padding: 0 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.tab {
+  flex: 1;
+  padding: 14px 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-3);
+  position: relative;
+  transition: color 0.2s;
+}
+
+.tab.active {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+}
+
+/* ===== PAGE ===== */
+.page {
+  display: none;
+  padding: 0 20px;
+}
+
+.page.active {
+  display: block;
+  animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== HERO ===== */
+.hero {
+  padding: 28px 4px 24px;
+}
+
+.hero-label {
+  font-size: 14px;
+  color: var(--text-2);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.hero-amount {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1.2;
+}
+
+.hero-amount .small {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+.hero-chip {
+  background: var(--surface);
+  padding: 6px 12px;
+  border-radius: 100px;
+  color: var(--text-2);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hero-chip.positive { color: var(--green); background: var(--green-soft); }
+.hero-chip.negative { color: var(--red); background: var(--red-soft); }
+
+/* ===== SECTION ===== */
+.section-title {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 28px 4px 14px;
+  letter-spacing: -0.4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-action {
+  font-size: 13px;
+  color: var(--text-3);
+  font-weight: 500;
+}
+
+/* ===== CARD ===== */
+.card {
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+}
+
+.card-flat {
+  background: var(--surface);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+/* ===== HOLDING LIST ===== */
+.holding-list-card {
+  background: var(--surface);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.holding-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line-2);
+  transition: background 0.15s;
+}
+
+.holding-row:last-child { border-bottom: none; }
+.holding-row:active { background: var(--bg); }
+
+.holding-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.holding-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.holding-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.holding-cat {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+.holding-amount-wrap {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.holding-amount {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.holding-currency {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+.empty {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--text-3);
+  font-size: 14px;
+}
+
+/* ===== CATEGORY ICONS ===== */
+.icon-cash { background: var(--green-soft); color: var(--green); }
+.icon-savings { background: var(--blue-soft); color: var(--blue); }
+.icon-kr { background: #FFF0F0; color: #E55A5A; }
+.icon-us { background: #F0EAFF; color: #7B4FE0; }
+.icon-etc { background: var(--orange-soft); color: var(--orange); }
+
+/* ===== ADD BUTTON (FAB) ===== */
+.fab {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text);
+  color: white;
+  width: auto;
+  height: 56px;
+  padding: 0 28px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+  z-index: 20;
+  transition: transform 0.15s;
+}
+
+.fab:active { transform: translateX(-50%) scale(0.96); }
+
+.fab-icon {
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+/* ===== ALLOCATION ===== */
+.alloc-chart-card {
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 24px 20px 16px;
+  margin-bottom: 12px;
+}
+
+.donut-wrap {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  margin-bottom: 8px;
+}
+
+.donut-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+
+.donut-label {
+  font-size: 12px;
+  color: var(--text-3);
+  font-weight: 500;
+}
+
+.donut-value {
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 2px;
+  color: var(--text);
+}
+
+/* ===== ALLOCATION ROWS (deprecated, see ALLOC ROW above) ===== */
+
+.alloc-row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.alloc-row-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.alloc-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.alloc-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.alloc-pct {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.alloc-pct .target {
+  font-size: 12px;
+  color: var(--text-3);
+  font-weight: 500;
+  margin-left: 6px;
+}
+
+.alloc-bar-wrap {
+  position: relative;
+  height: 8px;
+  background: var(--line-2);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.alloc-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.alloc-bar-target {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 2px;
+  background: var(--text);
+  border-radius: 1px;
+}
+
+.alloc-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-3);
+  font-weight: 500;
+}
+
+.alloc-meta-row .gap {
+  font-weight: 600;
+}
+
+.gap-over { color: var(--orange); }
+.gap-under { color: var(--blue); }
+.gap-ok { color: var(--green); }
+
+.alloc-yield-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line-2);
+  font-size: 13px;
+}
+
+.alloc-yield-label {
+  color: var(--text-2);
+  font-weight: 500;
+}
+
+.alloc-yield-value {
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ===== EXPECTED RETURN CARD ===== */
+.expected-card {
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+  color: white;
+  border-radius: 14px;
+  padding: 22px 22px;
+  margin-bottom: 16px;
+}
+
+.expected-label {
+  font-size: 13px;
+  opacity: 0.85;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.expected-value {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  line-height: 1.1;
+}
+
+.expected-sub {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+/* ===== HISTORY CHART ===== */
+.history-chart-card {
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 20px 16px 16px;
+  margin-bottom: 12px;
+}
+
+.history-chart-wrap {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  margin-top: 8px;
+}
+
+.chart-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.chart-tab {
+  padding: 6px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-3);
+  background: var(--bg);
+  transition: all 0.15s;
+}
+
+.chart-tab.active {
+  background: var(--text);
+  color: white;
+}
+
+/* ===== SNAPSHOT LIST ===== */
+.snap-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line-2);
+}
+
+.snap-row:last-child { border-bottom: none; }
+
+.snap-date {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.snap-meta {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+.snap-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.snap-total {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.snap-change {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 100px;
+  min-width: 55px;
+  text-align: center;
+}
+
+.snap-change.positive { background: var(--green-soft); color: var(--green); }
+.snap-change.negative { background: var(--red-soft); color: var(--red); }
+.snap-change.neutral { background: var(--line-2); color: var(--text-3); }
+
+.snap-del {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-4);
+  font-size: 16px;
+}
+
+.snap-del:active { background: var(--bg); }
+
+/* ===== MODAL ===== */
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-bg.show { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 16px 20px 32px;
+  animation: slideUpFull 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUpFull {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.modal-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 4px;
+  letter-spacing: -0.5px;
+}
+
+.modal-desc {
+  font-size: 13px;
+  color: var(--text-3);
+  margin-bottom: 20px;
+}
+
+.modal-field {
+  margin-bottom: 14px;
+}
+
+.field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 16px;
+  background: var(--bg);
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  transition: all 0.15s;
+  font-weight: 500;
+}
+
+.input:focus {
+  outline: none;
+  background: white;
+  border-color: var(--blue);
+}
+
+.select {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 16px;
+  background: var(--bg);
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  font-weight: 500;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none' stroke='%238B95A1' stroke-width='2'%3E%3Cpath d='M5 8l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+
+.select:focus { outline: none; background-color: white; border-color: var(--blue); }
+
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.currency-toggle {
+  display: flex;
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 4px;
+}
+
+.curr-btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-3);
+  transition: all 0.15s;
+}
+
+.curr-btn.active {
+  background: white;
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.modal-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--text);
+  color: white;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 8px;
+  transition: opacity 0.15s;
+}
+
+.modal-btn:active { opacity: 0.8; }
+
+.modal-btn-secondary {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.modal-btn-danger {
+  background: var(--red-soft);
+  color: var(--red);
+}
+
+.modal-row {
+  display: flex;
+  gap: 8px;
+}
+
+.modal-row .modal-btn { margin-top: 0; }
+
+/* ===== EDIT MODE ITEM ===== */
+.holding-row.editable { cursor: pointer; }
+
+.holding-row .edit-hint {
+  color: var(--text-4);
+  font-size: 18px;
+  margin-left: 4px;
+}
+
+/* ===== EMPTY STATE WITH ACTION ===== */
+.empty-cta {
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.empty-cta-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.empty-cta-text {
+  font-size: 14px;
+  color: var(--text-2);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+.empty-cta-btn {
+  background: var(--blue);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ===== SETTINGS-LIKE ITEM ===== */
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line-2);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.menu-item:last-child { border-bottom: none; }
+.menu-item:active { background: var(--bg); }
+
+.menu-value {
+  color: var(--text-3);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.menu-arrow {
+  color: var(--text-4);
+  font-size: 18px;
+}
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--text);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 200;
+  white-space: nowrap;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ===== ALLOC ROW (clickable) ===== */
+.alloc-row {
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.alloc-row:active { background: var(--bg); }
+
+.alloc-row .chevron {
+  color: var(--text-4);
+  font-size: 16px;
+  margin-left: 6px;
+}
+
+/* ===== CATEGORY DETAIL MODAL ===== */
+.cat-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.cat-detail-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.cat-detail-info {
+  flex: 1;
+}
+
+.cat-detail-name {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+.cat-detail-sub {
+  font-size: 13px;
+  color: var(--text-3);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.cat-detail-summary {
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+}
+
+.cat-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 13px;
+}
+
+.cat-summary-row .label { color: var(--text-3); font-weight: 500; }
+.cat-summary-row .value { font-weight: 700; }
+
+.cat-summary-divider {
+  height: 1px;
+  background: var(--line);
+  margin: 8px 0;
+}
+
+.cat-item-list {
+  margin-bottom: 16px;
+}
+
+.cat-item-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line-2);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.cat-item-row:last-child { border-bottom: none; }
+.cat-item-row:active { opacity: 0.6; }
+
+.cat-item-info { flex: 1; min-width: 0; }
+
+.cat-item-name {
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cat-item-meta {
+  font-size: 12px;
+  color: var(--text-3);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.cat-item-right { text-align: right; flex-shrink: 0; }
+
+.cat-item-amount {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.cat-item-return {
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 3px;
+}
+
+.cat-item-return.positive { color: var(--green); }
+.cat-item-return.negative { color: var(--red); }
+.cat-item-return.zero { color: var(--text-3); }
+
+.cat-add-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--bg);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.15s;
+}
+
+.cat-add-btn:active { background: var(--line-2); }
+
+.cat-empty {
+  padding: 32px 20px;
+  text-align: center;
+  color: var(--text-3);
+  font-size: 13px;
+  background: var(--bg);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+
+.stack-bar-wrap {
+  display: flex;
+  width: 100%;
+  height: 32px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  background: var(--line-2);
+}
+
+.stack-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  transition: flex 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.portfolio-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-name {
+  flex: 1;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.legend-pct {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.legend-amount {
+  color: var(--text-3);
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 80px;
+  text-align: right;
+}
+
+/* ===== TOP HOLDING ROW ===== */
+.top-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line-2);
+}
+
+.top-row:last-child { border-bottom: none; }
+
+.top-rank {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-3);
+  width: 20px;
+}
+
+.top-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.top-name {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.top-cat {
+  font-size: 11px;
+  color: var(--text-3);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.top-pct {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.top-bar {
+  width: 60px;
+  height: 4px;
+  background: var(--line-2);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.top-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+
+/* ===== RETURN BADGE ===== */
+.return-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 100px;
+  margin-top: 4px;
+}
+
+.return-badge.positive { background: var(--green-soft); color: var(--green); }
+.return-badge.negative { background: var(--red-soft); color: var(--red); }
+.return-badge.zero { background: var(--line-2); color: var(--text-3); }
+
+/* ===== CATEGORY RETURN ROW ===== */
+.alloc-return-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line-2);
+  font-size: 12px;
+}
+
+.alloc-return-label {
+  color: var(--text-3);
+  font-weight: 500;
+}
+
+.alloc-return-value {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+
+.target-yield-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line-2);
+}
+
+.target-yield-row:last-child { border-bottom: none; }
+
+.target-yield-name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.target-yield-input {
+  width: 80px;
+  padding: 8px 12px;
+  background: var(--bg);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: right;
+  font-family: inherit;
+}
+
+.target-yield-input:focus {
+  outline: none;
+  background: white;
+  border-color: var(--blue);
+}
+
+.target-yield-pct {
+  font-size: 13px;
+  color: var(--text-3);
+  font-weight: 500;
+  width: 16px;
+}
+
+/* ===== SUMMARY GRID ===== */
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.summary-mini {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.summary-mini-label {
+  font-size: 12px;
+  color: var(--text-3);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.summary-mini-value {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.summary-mini-value.positive { color: var(--green); }
+.summary-mini-value.negative { color: var(--red); }
+
+.summary-mini-sub {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+/* ===== TOTAL TARGET SUM ===== */
+.target-sum-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.target-sum-display .value.ok { color: var(--green); }
+.target-sum-display .value.bad { color: var(--red); }
+
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-title">정훈 자산</div>
+    <div class="header-actions">
+      <button class="icon-btn" id="export-btn" aria-label="백업">↓</button>
+      <button class="icon-btn" id="import-btn" aria-label="복원">↑</button>
+      <button class="icon-btn" id="settings-btn" aria-label="설정">⚙</button>
+      <input type="file" id="import-file" accept=".json" style="display:none">
+    </div>
+  </header>
+
+  <!-- TABS -->
+  <nav class="tabs">
+    <button class="tab active" data-page="holdings">자산</button>
+    <button class="tab" data-page="allocation">배분 · 목표</button>
+    <button class="tab" data-page="history">흐름</button>
+  </nav>
+
+  <!-- ============ HOLDINGS ============ -->
+  <div class="page active" id="page-holdings">
+
+    <div class="hero">
+      <div class="hero-label">전체 자산</div>
+      <div class="hero-amount"><span id="hero-total">0</span><span class="small">원</span></div>
+      <div class="hero-sub" id="hero-total-sub" style="font-size:13px; color:var(--text-3); font-weight:500; margin-top:4px;"></div>
+      <div class="hero-meta">
+        <span class="hero-chip" id="hero-update">처음 사용</span>
+        <span class="hero-chip" id="hero-mom" style="display:none;"></span>
+      </div>
+    </div>
+
+    <div class="section-title">
+      <span>보유 자산</span>
+      <span class="section-action" id="holdings-count">0개</span>
+    </div>
+
+    <div id="holdings-container"></div>
+
+  </div>
+
+  <!-- ============ ALLOCATION ============ -->
+  <div class="page" id="page-allocation">
+
+    <div class="hero">
+      <div class="hero-label">총자산</div>
+      <div class="hero-amount"><span id="alloc-total">0</span><span class="small">원</span></div>
+      <div class="hero-sub" id="alloc-total-sub" style="font-size:13px; color:var(--text-3); font-weight:500; margin-top:4px;"></div>
+    </div>
+
+    <div class="alloc-chart-card">
+      <div class="donut-wrap">
+        <canvas id="donut"></canvas>
+        <div class="donut-center">
+          <div class="donut-label">현재 비중</div>
+          <div class="donut-value" id="donut-total">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">
+      <span>카테고리별 상세</span>
+      <button class="section-action" id="open-target-modal" style="color:var(--blue);">목표 수정</button>
+    </div>
+
+    <div id="alloc-rows"></div>
+
+  </div>
+
+  <!-- ============ HISTORY ============ -->
+  <div class="page" id="page-history">
+
+    <div class="hero">
+      <div class="hero-label">자산 변화</div>
+      <div class="hero-amount" style="font-size: 22px; font-weight: 700;">시간에 따른 흐름</div>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-mini">
+        <div class="summary-mini-label">최근 30일</div>
+        <div class="summary-mini-value" id="mini-30d">—</div>
+        <div class="summary-mini-sub" id="mini-30d-sub">데이터 없음</div>
+      </div>
+      <div class="summary-mini">
+        <div class="summary-mini-label">최고 자산</div>
+        <div class="summary-mini-value" id="mini-peak">—</div>
+        <div class="summary-mini-sub" id="mini-peak-sub">—</div>
+      </div>
+    </div>
+
+    <div class="history-chart-card">
+      <div class="chart-tabs">
+        <button class="chart-tab active" data-range="all">전체</button>
+        <button class="chart-tab" data-range="3m">3개월</button>
+        <button class="chart-tab" data-range="1m">1개월</button>
+        <button class="chart-tab" data-range="monthly">월별만</button>
+      </div>
+      <div class="history-chart-wrap">
+        <canvas id="history-chart"></canvas>
+      </div>
+    </div>
+
+    <div class="section-title">
+      <span>현재 포트폴리오</span>
+      <span class="section-action" id="portfolio-summary-text">—</span>
+    </div>
+
+    <div class="history-chart-card">
+      <div style="font-size:13px; color:var(--text-3); font-weight:500; margin-bottom:10px;">카테고리별 비중</div>
+      <div class="stack-bar-wrap" id="stack-bar"></div>
+      <div class="portfolio-legend" id="portfolio-legend"></div>
+    </div>
+
+    <div class="section-title">
+      <span>종목별 비중 TOP</span>
+    </div>
+
+    <div class="card-flat" id="top-holdings-wrap">
+      <div class="empty">자산을 입력하면 표시됩니다</div>
+    </div>
+
+    <div class="section-title">
+      <span>변경 기록</span>
+      <button class="section-action" id="manual-snap" style="color:var(--blue);">+ 지금 기록</button>
+    </div>
+
+    <div class="card-flat" id="snap-list-wrap">
+      <div class="empty" id="snap-empty">아직 기록이 없습니다</div>
+    </div>
+
+  </div>
+
+  <!-- FAB -->
+  <button class="fab" id="fab"><span class="fab-icon">+</span>자산 추가</button>
+
+</div>
+
+<!-- ===== MODALS ===== -->
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-bg" id="modal-add">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="add-title">자산 추가</div>
+    <div class="modal-desc" id="add-desc">새로운 자산을 등록합니다</div>
+
+    <div class="modal-field">
+      <label class="field-label">카테고리</label>
+      <select class="select" id="add-cat">
+        <option value="cash">💚 현금/입출금</option>
+        <option value="savings">💙 예적금</option>
+        <option value="kr_stock">❤️ 국내주식/ETF</option>
+        <option value="us_stock">💜 해외주식/ETF</option>
+        <option value="etc">🧡 기타</option>
+      </select>
+    </div>
+
+    <div class="modal-field">
+      <label class="field-label">자산 이름</label>
+      <input class="input" id="add-name" placeholder="예: 토스뱅크, VOO, KB예금" />
+    </div>
+
+    <div class="modal-field">
+      <label class="field-label">현재 평가액</label>
+      <div class="input-row">
+        <input class="input" type="number" inputmode="numeric" id="add-amount" placeholder="0" />
+        <div class="currency-toggle">
+          <button class="curr-btn active" data-curr="KRW">원</button>
+          <button class="curr-btn" data-curr="USD">$</button>
+        </div>
+      </div>
+      <div id="add-conv" style="font-size:12px; color:var(--text-3); margin-top:6px; font-weight:500; display:none;"></div>
+    </div>
+
+    <div class="modal-field">
+      <label class="field-label">원금 <span style="font-weight:500; color:var(--text-3); font-size:12px;">(선택 · 비우면 수익률 계산 안 함)</span></label>
+      <input class="input" type="number" inputmode="numeric" id="add-principal" placeholder="0" />
+      <div id="add-return-preview" style="font-size:13px; font-weight:600; margin-top:6px; display:none;"></div>
+    </div>
+
+    <button class="modal-btn" id="add-save">저장</button>
+    <div class="modal-row" id="edit-actions" style="display:none; margin-top:8px;">
+      <button class="modal-btn modal-btn-danger" id="add-delete">삭제</button>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORY DETAIL MODAL -->
+<div class="modal-bg" id="modal-cat">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    
+    <div class="cat-detail-header">
+      <div class="cat-detail-icon" id="cat-icon"></div>
+      <div class="cat-detail-info">
+        <div class="cat-detail-name" id="cat-name">—</div>
+        <div class="cat-detail-sub" id="cat-sub">—</div>
+      </div>
+    </div>
+
+    <div class="cat-detail-summary">
+      <div class="cat-summary-row">
+        <span class="label">총 평가액</span>
+        <span class="value" id="cat-current">0원</span>
+      </div>
+      <div class="cat-summary-row">
+        <span class="label">총 원금</span>
+        <span class="value" id="cat-principal">0원</span>
+      </div>
+      <div class="cat-summary-divider"></div>
+      <div class="cat-summary-row">
+        <span class="label">평가 손익</span>
+        <span class="value" id="cat-profit">—</span>
+      </div>
+      <div class="cat-summary-row">
+        <span class="label">실제 수익률</span>
+        <span class="value" id="cat-return">—</span>
+      </div>
+      <div class="cat-summary-divider"></div>
+      <div class="cat-summary-row">
+        <span class="label">전체 자산 중 비중</span>
+        <span class="value" id="cat-weight">—</span>
+      </div>
+    </div>
+
+    <div style="font-size:13px; font-weight:700; color:var(--text); margin-bottom:8px;">보유 상품</div>
+    <div class="cat-item-list" id="cat-items"></div>
+
+    <button class="cat-add-btn" id="cat-add-item">
+      <span style="font-size:18px; font-weight:300;">+</span>
+      이 카테고리에 상품 추가
+    </button>
+  </div>
+</div>
+
+<!-- TARGET YIELD MODAL -->
+<div class="modal-bg" id="modal-target">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">목표 배분 · 수익률</div>
+    <div class="modal-desc">카테고리별 목표 비중과 예상 수익률을 설정합니다</div>
+
+    <div id="target-fields"></div>
+
+    <div class="target-sum-display">
+      <span>합계</span>
+      <span class="value" id="target-sum">100%</span>
+    </div>
+
+    <button class="modal-btn" id="target-save" style="margin-top:16px;">저장</button>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-bg" id="modal-settings">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">설정</div>
+    <div class="modal-desc">앱 환경을 관리합니다</div>
+
+    <div class="modal-field">
+      <label class="field-label">환율 (USD → KRW)</label>
+      <div class="input-row">
+        <input class="input" type="number" id="fx-input" placeholder="1500" />
+        <div style="padding: 10px 14px; color: var(--text-3); font-weight: 600;">원/$</div>
+      </div>
+    </div>
+
+    <button class="modal-btn" id="fx-save">저장</button>
+
+    <div style="height: 1px; background: var(--line-2); margin: 24px 0;"></div>
+
+    <div class="modal-field">
+      <label class="field-label">데이터 관리</label>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="modal-btn modal-btn-secondary" id="export-btn-2">JSON 백업 다운로드</button>
+        <button class="modal-btn modal-btn-secondary" id="import-btn-2">백업 파일 복원</button>
+        <button class="modal-btn modal-btn-danger" id="reset-btn">전체 초기화</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-bg" id="modal-confirm">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="confirm-title">확인</div>
+    <div class="modal-desc" id="confirm-msg">정말 진행하시겠습니까?</div>
+    <div class="modal-row">
+      <button class="modal-btn modal-btn-secondary" id="confirm-cancel">취소</button>
+      <button class="modal-btn modal-btn-danger" id="confirm-ok">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ CONFIG ============
+const CATEGORIES = [
+  { key: 'cash',     label: '현금/입출금',  color: '#00C896', iconClass: 'icon-cash',    emoji: '💚', defTarget: 10, defYield: 2.5 },
+  { key: 'savings',  label: '예적금',       color: '#3182F6', iconClass: 'icon-savings', emoji: '💙', defTarget: 25, defYield: 3.5 },
+  { key: 'kr_stock', label: '국내주식/ETF', color: '#E55A5A', iconClass: 'icon-kr',      emoji: '❤️', defTarget: 10, defYield: 6.0 },
+  { key: 'us_stock', label: '해외주식/ETF', color: '#7B4FE0', iconClass: 'icon-us',      emoji: '💜', defTarget: 50, defYield: 9.0 },
+  { key: 'etc',      label: '기타',         color: '#FF9500', iconClass: 'icon-etc',     emoji: '🧡', defTarget: 5,  defYield: 5.0 }
+];
+
+const STORAGE = 'jeonghun_asset_v2';
+
+let state = {
+  holdings: [],
+  targets: {},
+  yields: {},
+  snapshots: [],
+  fxRate: 1500,
+  lastUpdate: null
+};
+
+CATEGORIES.forEach(c => {
+  state.targets[c.key] = c.defTarget;
+  state.yields[c.key] = c.defYield;
+});
+
+let editingId = null;
+let addCurr = 'KRW';
+let chartRange = 'all';
+let donutChart = null;
+let historyChart = null;
+
+// ============ STORAGE ============
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE);
+    if (raw) {
+      const saved = JSON.parse(raw);
+      state = { ...state, ...saved };
+      CATEGORIES.forEach(c => {
+        if (state.targets[c.key] === undefined) state.targets[c.key] = c.defTarget;
+        if (state.yields[c.key] === undefined) state.yields[c.key] = c.defYield;
+      });
+    }
+  } catch(e) { console.error(e); }
+}
+
+function save() {
+  state.lastUpdate = new Date().toISOString();
+  try { localStorage.setItem(STORAGE, JSON.stringify(state)); }
+  catch(e) { toast('저장 실패'); }
+}
+
+// ============ UTIL ============
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+function fmtNum(n) {
+  n = Math.round(Number(n) || 0);
+  return n.toLocaleString();
+}
+
+function fmt(n) {
+  n = Number(n) || 0;
+  if (n === 0) return '0';
+  const abs = Math.abs(n);
+  if (abs >= 100000000) {
+    const eok = n / 100000000;
+    return eok.toFixed(eok < 10 ? 2 : 1).replace(/\.?0+$/, '') + '억';
+  }
+  if (abs >= 10000) return Math.round(n/10000).toLocaleString() + '만';
+  return Math.round(n).toLocaleString();
+}
+
+function fmtKRW(n) { return fmt(n) + '원'; }
+
+function fmtFull(n) {
+  // 원 단위 풀 표시 (1,234,567)
+  return Math.round(Number(n) || 0).toLocaleString();
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  const now = new Date();
+  const diff = Math.floor((now - d) / 86400000);
+  if (diff === 0) return '오늘';
+  if (diff === 1) return '어제';
+  if (diff < 7) return diff + '일 전';
+  return (d.getMonth()+1) + '/' + d.getDate();
+}
+
+function fmtFullDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0');
+}
+
+function escapeHTML(s) {
+  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+}
+
+function toKRW(h) {
+  if (h.currency === 'USD') return (Number(h.amount) || 0) * state.fxRate;
+  return Number(h.amount) || 0;
+}
+
+function getTotal() {
+  return state.holdings.reduce((s, h) => s + toKRW(h), 0);
+}
+
+function getByCat() {
+  const m = {};
+  CATEGORIES.forEach(c => m[c.key] = 0);
+  state.holdings.forEach(h => m[h.cat] = (m[h.cat] || 0) + toKRW(h));
+  return m;
+}
+
+// ============ TOAST ============
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// ============ MODAL ============
+function openModal(id) {
+  document.getElementById(id).classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+document.querySelectorAll('.modal-bg').forEach(bg => {
+  bg.addEventListener('click', (e) => {
+    if (e.target === bg) {
+      closeModal(bg.id);
+      // 카테고리 상세 모달 닫힐 때 배분 페이지 갱신
+      if (bg.id === 'modal-cat') {
+        currentDetailCat = null;
+        if (document.getElementById('page-allocation').classList.contains('active')) {
+          renderAllocation();
+        }
+      }
+    }
+  });
+});
+
+let confirmCB = null;
+function confirmDialog(title, msg, cb) {
+  document.getElementById('confirm-title').textContent = title;
+  document.getElementById('confirm-msg').textContent = msg;
+  confirmCB = cb;
+  openModal('modal-confirm');
+}
+
+document.getElementById('confirm-ok').addEventListener('click', () => {
+  closeModal('modal-confirm');
+  if (confirmCB) confirmCB();
+  confirmCB = null;
+});
+
+document.getElementById('confirm-cancel').addEventListener('click', () => {
+  closeModal('modal-confirm');
+  confirmCB = null;
+});
+
+// ============ TABS ============
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + tab.dataset.page).classList.add('active');
+    if (tab.dataset.page === 'allocation') renderAllocation();
+    if (tab.dataset.page === 'history') renderHistory();
+  });
+});
+
+// ============ HOLDINGS PAGE ============
+function renderHoldings() {
+  const total = getTotal();
+  document.getElementById('hero-total').textContent = fmtFull(total);
+  document.getElementById('holdings-count').textContent = state.holdings.length + '개';
+  
+  // 총자산 보조 표시 (억/만 단위 요약)
+  const heroSub = document.getElementById('hero-total-sub');
+  if (total >= 10000) {
+    heroSub.textContent = '약 ' + fmt(total);
+    heroSub.style.display = 'block';
+  } else {
+    heroSub.style.display = 'none';
+  }
+  
+  // 갱신 시간
+  document.getElementById('hero-update').textContent = state.lastUpdate ? fmtDate(state.lastUpdate) + ' 갱신' : '처음 사용';
+  
+  // 전월 대비
+  const lastMonthSnap = findLastMonthSnap();
+  const momEl = document.getElementById('hero-mom');
+  if (lastMonthSnap && total > 0 && lastMonthSnap.total !== total) {
+    const diff = total - lastMonthSnap.total;
+    const pct = lastMonthSnap.total > 0 ? (diff/lastMonthSnap.total*100).toFixed(1) : 0;
+    const sign = diff >= 0 ? '+' : '';
+    momEl.textContent = '전월 ' + sign + pct + '%';
+    momEl.className = 'hero-chip ' + (diff >= 0 ? 'positive' : 'negative');
+    momEl.style.display = 'inline-flex';
+  } else {
+    momEl.style.display = 'none';
+  }
+  
+  // 자산 목록
+  const container = document.getElementById('holdings-container');
+  if (state.holdings.length === 0) {
+    container.innerHTML = `
+      <div class="empty-cta">
+        <div class="empty-cta-icon">💰</div>
+        <div class="empty-cta-text">아직 등록된 자산이 없습니다<br>아래 + 버튼으로 시작하세요</div>
+      </div>`;
+    return;
+  }
+  
+  // 카테고리별 그룹화
+  const grouped = {};
+  CATEGORIES.forEach(c => grouped[c.key] = []);
+  state.holdings.forEach(h => grouped[h.cat].push(h));
+  
+  container.innerHTML = '';
+  CATEGORIES.forEach(c => {
+    const items = grouped[c.key];
+    if (items.length === 0) return;
+    items.sort((a,b) => toKRW(b) - toKRW(a));
+    
+    const card = document.createElement('div');
+    card.className = 'holding-list-card';
+    card.style.marginBottom = '12px';
+    
+    items.forEach(h => {
+      const krw = toKRW(h);
+      const row = document.createElement('div');
+      row.className = 'holding-row editable';
+      row.dataset.id = h.id;
+      const currLabel = h.currency === 'USD' ? '$' + fmtNum(h.amount) : '';
+      
+      // 수익률 계산
+      let returnHTML = '';
+      const principalKRW = getPrincipalKRW(h);
+      if (principalKRW > 0) {
+        const profit = krw - principalKRW;
+        const pct = (profit / principalKRW * 100);
+        const sign = profit >= 0 ? '+' : '';
+        const cls = profit > 0 ? 'positive' : (profit < 0 ? 'negative' : 'zero');
+        returnHTML = `<div class="return-badge ${cls}">${sign}${pct.toFixed(1)}% · ${sign}${fmt(profit)}</div>`;
+      }
+      
+      row.innerHTML = `
+        <div class="holding-icon ${c.iconClass}">${c.label[0]}</div>
+        <div class="holding-info">
+          <div class="holding-name">${escapeHTML(h.name)}</div>
+          <div class="holding-cat">${c.label}${currLabel ? ' · ' + currLabel : ''}</div>
+        </div>
+        <div class="holding-amount-wrap">
+          <div class="holding-amount">${fmtFull(krw)}원</div>
+          ${returnHTML}
+        </div>
+        <div class="edit-hint">›</div>
+      `;
+      row.addEventListener('click', () => openEdit(h.id));
+      card.appendChild(row);
+    });
+    
+    container.appendChild(card);
+  });
+}
+
+function getPrincipalKRW(h) {
+  if (!h.principal || h.principal <= 0) return 0;
+  if (h.principalCurrency === 'USD') return h.principal * state.fxRate;
+  return h.principal;
+}
+
+function findLastMonthSnap() {
+  const now = new Date();
+  const cutoff = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+  for (let i = state.snapshots.length - 1; i >= 0; i--) {
+    if (new Date(state.snapshots[i].date) <= cutoff) {
+      return state.snapshots[i];
+    }
+  }
+  return state.snapshots[0] || null;
+}
+
+// ============ ADD/EDIT MODAL ============
+function openAdd() {
+  editingId = null;
+  addCurr = 'KRW';
+  document.getElementById('add-title').textContent = '자산 추가';
+  document.getElementById('add-desc').textContent = '새로운 자산을 등록합니다';
+  document.getElementById('add-cat').value = 'cash';
+  document.getElementById('add-name').value = '';
+  document.getElementById('add-amount').value = '';
+  document.getElementById('add-principal').value = '';
+  document.getElementById('add-conv').style.display = 'none';
+  document.getElementById('add-return-preview').style.display = 'none';
+  document.getElementById('edit-actions').style.display = 'none';
+  document.getElementById('add-save').textContent = '저장';
+  updateCurrToggle();
+  openModal('modal-add');
+  setTimeout(() => document.getElementById('add-name').focus(), 300);
+}
+
+function openEdit(id) {
+  const h = state.holdings.find(x => x.id === id);
+  if (!h) return;
+  editingId = id;
+  addCurr = h.currency || 'KRW';
+  document.getElementById('add-title').textContent = '자산 수정';
+  document.getElementById('add-desc').textContent = h.name;
+  document.getElementById('add-cat').value = h.cat;
+  document.getElementById('add-name').value = h.name;
+  document.getElementById('add-amount').value = h.amount;
+  document.getElementById('add-principal').value = h.principal || '';
+  document.getElementById('edit-actions').style.display = 'flex';
+  document.getElementById('add-save').textContent = '수정';
+  updateCurrToggle();
+  updateConv();
+  updateReturnPreview();
+  openModal('modal-add');
+  setTimeout(() => document.getElementById('add-amount').focus(), 300);
+}
+
+function updateReturnPreview() {
+  const amount = Number(document.getElementById('add-amount').value);
+  const principal = Number(document.getElementById('add-principal').value);
+  const preview = document.getElementById('add-return-preview');
+  if (principal > 0 && amount > 0) {
+    // 원금은 평가액과 같은 통화로 가정
+    const profit = amount - principal;
+    const pct = (profit / principal * 100);
+    const sign = profit >= 0 ? '+' : '';
+    const color = profit > 0 ? 'var(--green)' : (profit < 0 ? 'var(--red)' : 'var(--text-3)');
+    preview.innerHTML = `<span style="color:${color};">${sign}${pct.toFixed(1)}% (${sign}${fmtNum(profit)}${addCurr === 'USD' ? '$' : '원'})</span>`;
+    preview.style.display = 'block';
+  } else {
+    preview.style.display = 'none';
+  }
+}
+
+function updateCurrToggle() {
+  document.querySelectorAll('.curr-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.curr === addCurr);
+  });
+}
+
+function updateConv() {
+  const amt = Number(document.getElementById('add-amount').value);
+  const conv = document.getElementById('add-conv');
+  if (addCurr === 'USD' && amt > 0) {
+    conv.textContent = '≈ ' + fmtNum(amt * state.fxRate) + '원 (환율 ' + state.fxRate + ')';
+    conv.style.display = 'block';
+  } else {
+    conv.style.display = 'none';
+  }
+}
+
+document.querySelectorAll('.curr-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    addCurr = b.dataset.curr;
+    updateCurrToggle();
+    updateConv();
+    updateReturnPreview();
+  });
+});
+
+document.getElementById('add-amount').addEventListener('input', () => {
+  updateConv();
+  updateReturnPreview();
+});
+
+document.getElementById('add-principal').addEventListener('input', updateReturnPreview);
+
+document.getElementById('fab').addEventListener('click', openAdd);
+
+document.getElementById('add-save').addEventListener('click', () => {
+  const name = document.getElementById('add-name').value.trim();
+  const amount = Number(document.getElementById('add-amount').value);
+  const principal = Number(document.getElementById('add-principal').value) || 0;
+  if (!name) { toast('자산 이름을 입력해주세요'); return; }
+  if (!amount || amount <= 0) { toast('현재 평가액을 입력해주세요'); return; }
+  
+  const cat = document.getElementById('add-cat').value;
+  
+  if (editingId) {
+    const h = state.holdings.find(x => x.id === editingId);
+    if (h) {
+      const oldKRW = toKRW(h);
+      h.cat = cat;
+      h.name = name;
+      h.amount = amount;
+      h.currency = addCurr;
+      h.principal = principal;
+      h.principalCurrency = addCurr; // 평가액과 같은 통화로 처리
+      const newKRW = toKRW(h);
+      if (Math.abs(newKRW - oldKRW) > 0) autoSnapshot();
+    }
+    toast('수정되었습니다');
+  } else {
+    state.holdings.push({
+      id: uid(),
+      cat, name, amount,
+      currency: addCurr,
+      principal,
+      principalCurrency: addCurr,
+      createdAt: new Date().toISOString()
+    });
+    autoSnapshot();
+    toast('추가되었습니다');
+  }
+  
+  save();
+  renderHoldings();
+  if (currentDetailCat) renderCategoryDetail();
+  closeModal('modal-add');
+});
+
+document.getElementById('add-delete').addEventListener('click', () => {
+  if (!editingId) return;
+  const h = state.holdings.find(x => x.id === editingId);
+  if (!h) return;
+  confirmDialog('자산 삭제', `"${h.name}"을(를) 삭제하시겠습니까?`, () => {
+    state.holdings = state.holdings.filter(x => x.id !== editingId);
+    autoSnapshot();
+    save();
+    renderHoldings();
+    if (currentDetailCat) renderCategoryDetail();
+    closeModal('modal-add');
+    toast('삭제되었습니다');
+  });
+});
+
+// ============ AUTO SNAPSHOT ============
+function autoSnapshot() {
+  const total = getTotal();
+  const now = new Date().toISOString();
+  const last = state.snapshots[state.snapshots.length - 1];
+  
+  // 같은 분 내 중복 스냅샷 방지 (덮어쓰기)
+  if (last) {
+    const lastTime = new Date(last.date).getTime();
+    const nowTime = new Date(now).getTime();
+    if (nowTime - lastTime < 60000) {
+      last.date = now;
+      last.total = total;
+      last.byCategory = getByCat();
+      return;
+    }
+  }
+  
+  state.snapshots.push({
+    date: now,
+    total,
+    byCategory: getByCat(),
+    auto: true
+  });
+}
+
+// ============ ALLOCATION PAGE ============
+function renderAllocation() {
+  const total = getTotal();
+  const byCat = getByCat();
+  
+  // 총자산 hero
+  document.getElementById('alloc-total').textContent = fmtFull(total);
+  const allocSub = document.getElementById('alloc-total-sub');
+  if (total >= 10000) {
+    allocSub.textContent = '약 ' + fmt(total);
+    allocSub.style.display = 'block';
+  } else {
+    allocSub.style.display = 'none';
+  }
+  
+  // 도넛 차트 중앙
+  if (total > 0) {
+    document.getElementById('donut-total').textContent = state.holdings.length + '개 자산';
+  } else {
+    document.getElementById('donut-total').textContent = '—';
+  }
+  
+  renderDonut(byCat, total);
+  
+  // 카테고리별 원금/평가액 합산
+  const catPrincipal = {};
+  const catCurrent = {};
+  CATEGORIES.forEach(c => { catPrincipal[c.key] = 0; catCurrent[c.key] = 0; });
+  state.holdings.forEach(h => {
+    catCurrent[h.cat] = (catCurrent[h.cat] || 0) + toKRW(h);
+    const p = getPrincipalKRW(h);
+    if (p > 0) catPrincipal[h.cat] = (catPrincipal[h.cat] || 0) + p;
+  });
+  
+  // 카테고리별 상세
+  const rows = document.getElementById('alloc-rows');
+  rows.innerHTML = '';
+  CATEGORIES.forEach(c => {
+    const value = byCat[c.key] || 0;
+    const curPct = total > 0 ? (value / total * 100) : 0;
+    const tgtPct = state.targets[c.key] || 0;
+    const gap = curPct - tgtPct;
+    
+    let gapClass = 'gap-ok', gapText = '균형';
+    if (Math.abs(gap) > 3) {
+      if (gap > 0) { gapClass = 'gap-over'; gapText = '목표보다 +' + gap.toFixed(1) + '%p'; }
+      else { gapClass = 'gap-under'; gapText = '목표보다 ' + gap.toFixed(1) + '%p'; }
+    } else {
+      gapText = '목표 근접 (' + (gap >= 0 ? '+' : '') + gap.toFixed(1) + '%p)';
+    }
+    
+    if (total === 0) gapText = '자산 미입력';
+    
+    // 카테고리 수익률
+    let returnHTML = '';
+    const principal = catPrincipal[c.key];
+    const current = catCurrent[c.key];
+    if (principal > 0) {
+      const profit = current - principal;
+      const pct = (profit / principal * 100);
+      const sign = profit >= 0 ? '+' : '';
+      const color = profit > 0 ? 'var(--green)' : (profit < 0 ? 'var(--red)' : 'var(--text-3)');
+      returnHTML = `
+        <div class="alloc-return-row">
+          <span class="alloc-return-label">실제 수익률 (원금 ${fmt(principal)}원)</span>
+          <span class="alloc-return-value" style="color:${color};">${sign}${pct.toFixed(1)}% · ${sign}${fmt(profit)}</span>
+        </div>`;
+    }
+    
+    const row = document.createElement('div');
+    row.className = 'alloc-row';
+    row.dataset.cat = c.key;
+    row.innerHTML = `
+      <div class="alloc-row-top">
+        <div class="alloc-row-left">
+          <div class="alloc-dot" style="background:${c.color};"></div>
+          <div class="alloc-name">${c.label}</div>
+        </div>
+        <div class="alloc-pct">${curPct.toFixed(1)}%<span class="target">/ ${tgtPct}%</span><span class="chevron">›</span></div>
+      </div>
+      <div class="alloc-bar-wrap">
+        <div class="alloc-bar-fill" style="background:${c.color}; width:${Math.min(100, curPct)}%;"></div>
+        <div class="alloc-bar-target" style="left:${Math.min(100, tgtPct)}%;"></div>
+      </div>
+      <div class="alloc-meta-row">
+        <span>${fmtFull(value)}원</span>
+        <span class="gap ${gapClass}">${gapText}</span>
+      </div>
+      <div class="alloc-yield-row">
+        <span class="alloc-yield-label">목표 수익률</span>
+        <span class="alloc-yield-value" style="color:${c.color};">${(state.yields[c.key] || 0).toFixed(1)}%</span>
+      </div>
+      ${returnHTML}
+    `;
+    row.addEventListener('click', () => openCategoryDetail(c.key));
+    rows.appendChild(row);
+  });
+}
+
+// ============ CATEGORY DETAIL MODAL ============
+let currentDetailCat = null;
+
+function openCategoryDetail(catKey) {
+  const c = CATEGORIES.find(x => x.key === catKey);
+  if (!c) return;
+  currentDetailCat = catKey;
+  
+  // 헤더
+  const iconEl = document.getElementById('cat-icon');
+  iconEl.className = 'cat-detail-icon ' + c.iconClass;
+  iconEl.textContent = c.label[0];
+  document.getElementById('cat-name').textContent = c.label;
+  
+  renderCategoryDetail();
+  openModal('modal-cat');
+}
+
+function renderCategoryDetail() {
+  if (!currentDetailCat) return;
+  const c = CATEGORIES.find(x => x.key === currentDetailCat);
+  if (!c) return;
+  
+  const items = state.holdings.filter(h => h.cat === currentDetailCat);
+  const total = getTotal();
+  
+  // 합산 계산
+  let sumCurrent = 0;
+  let sumPrincipal = 0;
+  let hasPrincipal = false;
+  items.forEach(h => {
+    sumCurrent += toKRW(h);
+    const p = getPrincipalKRW(h);
+    if (p > 0) { sumPrincipal += p; hasPrincipal = true; }
+  });
+  
+  // 서브 텍스트
+  document.getElementById('cat-sub').textContent = items.length > 0 
+    ? items.length + '개 상품 보유'
+    : '아직 등록된 상품 없음';
+  
+  // 요약 카드
+  document.getElementById('cat-current').textContent = fmtFull(sumCurrent) + '원';
+  
+  if (hasPrincipal) {
+    document.getElementById('cat-principal').textContent = fmtFull(sumPrincipal) + '원';
+    const profit = sumCurrent - sumPrincipal;
+    const pct = sumPrincipal > 0 ? (profit / sumPrincipal * 100) : 0;
+    const sign = profit >= 0 ? '+' : '';
+    const color = profit > 0 ? 'var(--green)' : (profit < 0 ? 'var(--red)' : 'var(--text-3)');
+    document.getElementById('cat-profit').innerHTML = `<span style="color:${color};">${sign}${fmtFull(profit)}원</span>`;
+    document.getElementById('cat-return').innerHTML = `<span style="color:${color};">${sign}${pct.toFixed(2)}%</span>`;
+  } else {
+    document.getElementById('cat-principal').textContent = '미입력';
+    document.getElementById('cat-profit').textContent = '—';
+    document.getElementById('cat-return').textContent = '원금 입력 시 계산';
+  }
+  
+  // 전체 자산 중 비중
+  if (total > 0) {
+    const weight = (sumCurrent / total * 100);
+    const tgt = state.targets[currentDetailCat] || 0;
+    document.getElementById('cat-weight').innerHTML = 
+      `${weight.toFixed(1)}% <span style="color:var(--text-3); font-weight:500; font-size:12px;">/ 목표 ${tgt}%</span>`;
+  } else {
+    document.getElementById('cat-weight').textContent = '—';
+  }
+  
+  // 상품 목록
+  const listEl = document.getElementById('cat-items');
+  if (items.length === 0) {
+    listEl.innerHTML = '<div class="cat-empty">아직 등록된 상품이 없습니다<br>아래 + 버튼으로 추가하세요</div>';
+    return;
+  }
+  
+  items.sort((a, b) => toKRW(b) - toKRW(a));
+  listEl.innerHTML = '';
+  items.forEach(h => {
+    const krw = toKRW(h);
+    const principalKRW = getPrincipalKRW(h);
+    
+    let returnHTML = '';
+    let metaText = h.currency === 'USD' ? '$' + fmtNum(h.amount) : '';
+    
+    if (principalKRW > 0) {
+      const profit = krw - principalKRW;
+      const pct = (profit / principalKRW * 100);
+      const sign = profit >= 0 ? '+' : '';
+      const cls = profit > 0 ? 'positive' : (profit < 0 ? 'negative' : 'zero');
+      returnHTML = `<div class="cat-item-return ${cls}">${sign}${pct.toFixed(1)}% · ${sign}${fmt(profit)}원</div>`;
+      const principalText = '원금 ' + fmt(principalKRW) + '원';
+      metaText = metaText ? metaText + ' · ' + principalText : principalText;
+    } else {
+      metaText = metaText || '원금 미입력';
+    }
+    
+    const row = document.createElement('div');
+    row.className = 'cat-item-row';
+    row.innerHTML = `
+      <div class="cat-item-info">
+        <div class="cat-item-name">${escapeHTML(h.name)}</div>
+        <div class="cat-item-meta">${metaText}</div>
+      </div>
+      <div class="cat-item-right">
+        <div class="cat-item-amount">${fmtFull(krw)}원</div>
+        ${returnHTML}
+      </div>
+    `;
+    row.addEventListener('click', () => {
+      // 카테고리 모달 닫고 편집 모달 열기
+      closeModal('modal-cat');
+      setTimeout(() => openEdit(h.id), 200);
+    });
+    listEl.appendChild(row);
+  });
+}
+
+// 카테고리 모달에서 상품 추가
+document.getElementById('cat-add-item').addEventListener('click', () => {
+  if (!currentDetailCat) return;
+  const targetCat = currentDetailCat;
+  closeModal('modal-cat');
+  setTimeout(() => {
+    openAdd();
+    // 카테고리 미리 선택
+    document.getElementById('add-cat').value = targetCat;
+  }, 200);
+});
+
+// 자산 모달 저장/삭제 후 카테고리 모달 자동 재오픈 처리 (편집했던 카테고리로 돌아가기 위해)
+// → 이건 사용자 선택사항. 현재는 닫힌 채로 둠. 다시 보고 싶으면 배분 페이지로 가서 다시 클릭하면 됨.
+
+function renderDonut(byCat, total) {
+  const ctx = document.getElementById('donut');
+  if (donutChart) donutChart.destroy();
+  
+  const hasData = total > 0;
+  const data = CATEGORIES.map(c => byCat[c.key] || 0);
+  
+  donutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: CATEGORIES.map(c => c.label),
+      datasets: [{
+        data: hasData ? data : [1],
+        backgroundColor: hasData ? CATEGORIES.map(c => c.color) : ['#E5E8EB'],
+        borderWidth: 4,
+        borderColor: '#FFFFFF',
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '75%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          enabled: hasData,
+          backgroundColor: '#191F28',
+          padding: 12,
+          cornerRadius: 8,
+          titleFont: { family: 'Pretendard Variable', size: 12, weight: '600' },
+          bodyFont: { family: 'Pretendard Variable', size: 12, weight: '500' },
+          callbacks: {
+            label: (ctx) => {
+              const pct = total > 0 ? (ctx.parsed / total * 100).toFixed(1) : 0;
+              return ' ' + fmt(ctx.parsed) + '원 (' + pct + '%)';
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+// ============ TARGET MODAL ============
+document.getElementById('open-target-modal').addEventListener('click', openTargetModal);
+
+function openTargetModal() {
+  const fields = document.getElementById('target-fields');
+  fields.innerHTML = '';
+  CATEGORIES.forEach(c => {
+    const row = document.createElement('div');
+    row.className = 'target-yield-row';
+    row.innerHTML = `
+      <div class="target-yield-name">
+        <span style="width:8px; height:8px; border-radius:50%; background:${c.color}; display:inline-block;"></span>
+        ${c.label}
+      </div>
+      <div style="display:flex; align-items:center; gap:4px;">
+        <input type="number" class="target-yield-input" data-key="${c.key}" data-type="target" value="${state.targets[c.key]}" min="0" max="100" />
+        <span class="target-yield-pct">%</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:4px;">
+        <input type="number" class="target-yield-input" data-key="${c.key}" data-type="yield" value="${state.yields[c.key]}" min="-50" max="50" step="0.1" />
+        <span class="target-yield-pct">%</span>
+      </div>
+    `;
+    fields.appendChild(row);
+  });
+  
+  // 헤더
+  const header = document.createElement('div');
+  header.style.cssText = 'display:flex; justify-content:flex-end; gap:24px; padding-bottom:8px; font-size:11px; color:var(--text-3); font-weight:600;';
+  header.innerHTML = '<div style="width:80px; text-align:center;">목표 비중</div><div style="width:80px; text-align:center;">수익률</div>';
+  fields.insertBefore(header, fields.firstChild);
+  
+  updateTargetSum();
+  fields.querySelectorAll('input[data-type="target"]').forEach(inp => {
+    inp.addEventListener('input', updateTargetSum);
+  });
+  
+  openModal('modal-target');
+}
+
+function updateTargetSum() {
+  const inputs = document.querySelectorAll('#target-fields input[data-type="target"]');
+  let sum = 0;
+  inputs.forEach(i => sum += Number(i.value) || 0);
+  const el = document.getElementById('target-sum');
+  el.textContent = sum + '%';
+  el.className = 'value ' + (sum === 100 ? 'ok' : 'bad');
+}
+
+document.getElementById('target-save').addEventListener('click', () => {
+  const targetInputs = document.querySelectorAll('#target-fields input[data-type="target"]');
+  let sum = 0;
+  targetInputs.forEach(i => sum += Number(i.value) || 0);
+  if (sum !== 100) { toast('목표 비중 합계가 100%가 되어야 합니다'); return; }
+  
+  targetInputs.forEach(i => state.targets[i.dataset.key] = Number(i.value) || 0);
+  document.querySelectorAll('#target-fields input[data-type="yield"]').forEach(i => {
+    state.yields[i.dataset.key] = Number(i.value) || 0;
+  });
+  save();
+  renderAllocation();
+  closeModal('modal-target');
+  toast('목표가 저장되었습니다');
+});
+
+// ============ HISTORY PAGE ============
+function renderHistory() {
+  const snaps = state.snapshots;
+  
+  // 미니 카드
+  if (snaps.length >= 2) {
+    const now = new Date();
+    const cutoff30 = new Date(now.getTime() - 30 * 86400000);
+    const oldSnap = snaps.find(s => new Date(s.date) >= cutoff30) || snaps[0];
+    const latest = snaps[snaps.length - 1];
+    const diff = latest.total - oldSnap.total;
+    const pct = oldSnap.total > 0 ? (diff/oldSnap.total*100).toFixed(1) : 0;
+    const sign = diff >= 0 ? '+' : '';
+    const el = document.getElementById('mini-30d');
+    el.textContent = sign + fmt(diff) + '원';
+    el.className = 'summary-mini-value ' + (diff >= 0 ? 'positive' : 'negative');
+    document.getElementById('mini-30d-sub').textContent = sign + pct + '%';
+    
+    const peak = snaps.reduce((p, s) => s.total > p.total ? s : p, snaps[0]);
+    document.getElementById('mini-peak').textContent = fmt(peak.total) + '원';
+    document.getElementById('mini-peak-sub').textContent = fmtFullDate(peak.date);
+  } else if (snaps.length === 1) {
+    document.getElementById('mini-30d').textContent = '—';
+    document.getElementById('mini-30d-sub').textContent = '데이터 수집 중';
+    document.getElementById('mini-peak').textContent = fmt(snaps[0].total) + '원';
+    document.getElementById('mini-peak-sub').textContent = fmtFullDate(snaps[0].date);
+  } else {
+    document.getElementById('mini-30d').textContent = '—';
+    document.getElementById('mini-30d-sub').textContent = '데이터 없음';
+    document.getElementById('mini-peak').textContent = '—';
+    document.getElementById('mini-peak-sub').textContent = '—';
+  }
+  
+  renderHistoryChart();
+  renderSnapList();
+  renderPortfolioComposition();
+}
+
+// ============ PORTFOLIO COMPOSITION (흐름 페이지) ============
+function renderPortfolioComposition() {
+  const total = getTotal();
+  const byCat = getByCat();
+  const stackBar = document.getElementById('stack-bar');
+  const legend = document.getElementById('portfolio-legend');
+  const summaryText = document.getElementById('portfolio-summary-text');
+  const topWrap = document.getElementById('top-holdings-wrap');
+  
+  if (total === 0) {
+    stackBar.innerHTML = '<div style="flex:1; display:flex; align-items:center; justify-content:center; color:var(--text-3); font-size:12px; font-weight:500;">자산을 입력하세요</div>';
+    legend.innerHTML = '';
+    summaryText.textContent = '—';
+    topWrap.innerHTML = '<div class="empty">자산을 입력하면 표시됩니다</div>';
+    return;
+  }
+  
+  // 카테고리별 비중 정렬 (큰 것부터)
+  const sorted = CATEGORIES
+    .map(c => ({ ...c, value: byCat[c.key] || 0, pct: (byCat[c.key] || 0) / total * 100 }))
+    .filter(c => c.value > 0)
+    .sort((a, b) => b.value - a.value);
+  
+  // 가장 큰 카테고리 표시
+  const biggest = sorted[0];
+  summaryText.textContent = biggest.label + ' ' + biggest.pct.toFixed(1) + '%';
+  
+  // 스택바
+  stackBar.innerHTML = '';
+  sorted.forEach(c => {
+    const seg = document.createElement('div');
+    seg.className = 'stack-seg';
+    seg.style.flex = c.pct;
+    seg.style.background = c.color;
+    if (c.pct >= 8) seg.textContent = c.pct.toFixed(0) + '%';
+    stackBar.appendChild(seg);
+  });
+  
+  // 범례
+  legend.innerHTML = '';
+  sorted.forEach(c => {
+    const row = document.createElement('div');
+    row.className = 'legend-row';
+    row.innerHTML = `
+      <div class="legend-dot" style="background:${c.color};"></div>
+      <div class="legend-name">${c.label}</div>
+      <div class="legend-amount">${fmt(c.value)}원</div>
+      <div class="legend-pct">${c.pct.toFixed(1)}%</div>
+    `;
+    legend.appendChild(row);
+  });
+  
+  // 종목별 TOP
+  renderTopHoldings(total);
+}
+
+function renderTopHoldings(total) {
+  const topWrap = document.getElementById('top-holdings-wrap');
+  if (state.holdings.length === 0) {
+    topWrap.innerHTML = '<div class="empty">자산을 입력하면 표시됩니다</div>';
+    return;
+  }
+  
+  const sorted = [...state.holdings]
+    .map(h => ({ ...h, krw: toKRW(h), cat: CATEGORIES.find(c => c.key === h.cat) }))
+    .sort((a, b) => b.krw - a.krw)
+    .slice(0, 5);
+  
+  topWrap.innerHTML = '';
+  sorted.forEach((h, i) => {
+    const pct = total > 0 ? (h.krw / total * 100) : 0;
+    const row = document.createElement('div');
+    row.className = 'top-row';
+    row.innerHTML = `
+      <div class="top-rank">${i + 1}</div>
+      <div class="top-info">
+        <div class="top-name">${escapeHTML(h.name)}</div>
+        <div class="top-cat">${h.cat.label} · ${fmt(h.krw)}원</div>
+        <div class="top-bar"><div class="top-bar-fill" style="width:${Math.min(100, pct)}%; background:${h.cat.color};"></div></div>
+      </div>
+      <div class="top-pct" style="color:${h.cat.color};">${pct.toFixed(1)}%</div>
+    `;
+    topWrap.appendChild(row);
+  });
+}
+
+function getFilteredSnaps() {
+  const snaps = state.snapshots;
+  if (snaps.length === 0) return [];
+  
+  const now = new Date();
+  
+  if (chartRange === 'monthly') {
+    // 각 월의 마지막 스냅샷
+    const byMonth = {};
+    snaps.forEach(s => {
+      const d = new Date(s.date);
+      const key = d.getFullYear() + '-' + d.getMonth();
+      byMonth[key] = s;
+    });
+    return Object.values(byMonth).sort((a,b) => new Date(a.date) - new Date(b.date));
+  }
+  
+  let cutoff;
+  if (chartRange === '1m') cutoff = new Date(now.getTime() - 30 * 86400000);
+  else if (chartRange === '3m') cutoff = new Date(now.getTime() - 90 * 86400000);
+  else return snaps;
+  
+  return snaps.filter(s => new Date(s.date) >= cutoff);
+}
+
+function renderHistoryChart() {
+  const ctx = document.getElementById('history-chart');
+  if (historyChart) historyChart.destroy();
+  
+  const data = getFilteredSnaps();
+  
+  if (data.length === 0) {
+    historyChart = new Chart(ctx, {
+      type: 'line',
+      data: { labels: ['시작'], datasets: [{ data: [0], borderColor: '#E5E8EB' }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }}}
+    });
+    return;
+  }
+  
+  historyChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.map(s => {
+        const d = new Date(s.date);
+        return (d.getMonth()+1) + '/' + d.getDate();
+      }),
+      datasets: [{
+        data: data.map(s => s.total),
+        borderColor: '#3182F6',
+        backgroundColor: 'rgba(49, 130, 246, 0.08)',
+        borderWidth: 2.5,
+        tension: 0.35,
+        fill: true,
+        pointRadius: data.length > 20 ? 0 : 3,
+        pointBackgroundColor: '#3182F6',
+        pointBorderColor: '#FFFFFF',
+        pointBorderWidth: 2,
+        pointHoverRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#191F28',
+          padding: 10,
+          cornerRadius: 8,
+          titleFont: { family: 'Pretendard Variable', size: 11, weight: '500' },
+          bodyFont: { family: 'Pretendard Variable', size: 13, weight: '700' },
+          displayColors: false,
+          callbacks: { label: c => fmt(c.parsed.y) + '원' }
+        }
+      },
+      scales: {
+        x: { 
+          grid: { display: false },
+          ticks: { color: '#8B95A1', font: { family: 'Pretendard Variable', size: 11, weight: '500' }, maxTicksLimit: 6 }
+        },
+        y: {
+          grid: { color: '#F2F4F6' },
+          border: { display: false },
+          ticks: {
+            color: '#8B95A1',
+            font: { family: 'Pretendard Variable', size: 11, weight: '500' },
+            callback: v => fmt(v)
+          }
+        }
+      }
+    }
+  });
+}
+
+document.querySelectorAll('.chart-tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.chart-tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    chartRange = t.dataset.range;
+    renderHistoryChart();
+  });
+});
+
+function renderSnapList() {
+  const wrap = document.getElementById('snap-list-wrap');
+  const snaps = state.snapshots;
+  
+  if (snaps.length === 0) {
+    wrap.innerHTML = '<div class="empty" id="snap-empty">아직 기록이 없습니다</div>';
+    return;
+  }
+  
+  wrap.innerHTML = '';
+  const reversed = [...snaps].reverse();
+  // 최대 30개만 표시 (성능)
+  const display = reversed.slice(0, 30);
+  
+  display.forEach((s, i) => {
+    const realIdx = snaps.length - 1 - i;
+    const prev = reversed[i + 1];
+    let changeText = '시작', changeClass = 'neutral';
+    if (prev) {
+      const diff = s.total - prev.total;
+      if (diff === 0) { changeText = '변동 없음'; changeClass = 'neutral'; }
+      else {
+        const sign = diff > 0 ? '+' : '';
+        changeText = sign + fmt(diff);
+        changeClass = diff > 0 ? 'positive' : 'negative';
+      }
+    }
+    
+    const row = document.createElement('div');
+    row.className = 'snap-row';
+    row.innerHTML = `
+      <div>
+        <div class="snap-date">${fmtFullDate(s.date)}</div>
+        <div class="snap-meta">${new Date(s.date).toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit'})} ${s.auto ? '· 자동' : '· 수동'}</div>
+      </div>
+      <div class="snap-right">
+        <div class="snap-total">${fmt(s.total)}원</div>
+        <div class="snap-change ${changeClass}">${changeText}</div>
+        <button class="snap-del" data-idx="${realIdx}" aria-label="삭제">×</button>
+      </div>
+    `;
+    wrap.appendChild(row);
+  });
+  
+  if (snaps.length > 30) {
+    const more = document.createElement('div');
+    more.className = 'empty';
+    more.style.padding = '12px';
+    more.style.fontSize = '12px';
+    more.textContent = `+ ${snaps.length - 30}개 더 있음`;
+    wrap.appendChild(more);
+  }
+  
+  wrap.querySelectorAll('.snap-del').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const idx = Number(btn.dataset.idx);
+      confirmDialog('기록 삭제', '이 기록을 삭제하시겠습니까?', () => {
+        state.snapshots.splice(idx, 1);
+        save();
+        renderHistory();
+        toast('삭제되었습니다');
+      });
+    });
+  });
+}
+
+document.getElementById('manual-snap').addEventListener('click', () => {
+  const total = getTotal();
+  if (total === 0) { toast('자산을 먼저 입력해주세요'); return; }
+  state.snapshots.push({
+    date: new Date().toISOString(),
+    total,
+    byCategory: getByCat(),
+    auto: false
+  });
+  save();
+  renderHistory();
+  toast('현재 상태가 기록되었습니다');
+});
+
+// ============ SETTINGS ============
+document.getElementById('settings-btn').addEventListener('click', () => {
+  document.getElementById('fx-input').value = state.fxRate;
+  openModal('modal-settings');
+});
+
+document.getElementById('fx-save').addEventListener('click', () => {
+  const v = Number(document.getElementById('fx-input').value);
+  if (!v || v <= 0) { toast('유효한 환율을 입력해주세요'); return; }
+  state.fxRate = v;
+  save();
+  renderAll();
+  toast('환율이 저장되었습니다');
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  confirmDialog('전체 초기화', '모든 데이터가 삭제됩니다. 정말 진행하시겠습니까?', () => {
+    localStorage.removeItem(STORAGE);
+    location.reload();
+  });
+});
+
+// ============ EXPORT/IMPORT ============
+function exportData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const d = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = 'jeonghun_asset_' + d + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('백업 파일이 저장되었습니다');
+}
+
+function importData(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.holdings || !Array.isArray(data.holdings)) throw new Error('형식 오류');
+      confirmDialog('데이터 복원', '현재 데이터가 모두 덮어쓰여집니다. 진행하시겠습니까?', () => {
+        state = { ...state, ...data };
+        save();
+        renderAll();
+        toast('데이터가 복원되었습니다');
+      });
+    } catch(err) {
+      toast('잘못된 파일입니다');
+    }
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById('export-btn').addEventListener('click', exportData);
+document.getElementById('export-btn-2').addEventListener('click', exportData);
+document.getElementById('import-btn').addEventListener('click', () => document.getElementById('import-file').click());
+document.getElementById('import-btn-2').addEventListener('click', () => document.getElementById('import-file').click());
+document.getElementById('import-file').addEventListener('change', e => {
+  if (e.target.files[0]) importData(e.target.files[0]);
+  e.target.value = '';
+});
+
+// ============ INIT ============
+function renderAll() {
+  renderHoldings();
+  if (document.getElementById('page-allocation').classList.contains('active')) renderAllocation();
+  if (document.getElementById('page-history').classList.contains('active')) renderHistory();
+}
+
+load();
+renderAll();
+</script>
+
+<!-- PWA Service Worker 등록 -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('SW registered'))
+      .catch(err => console.log('SW failed', err));
+  });
+}
+
+// iOS 설치 안내 (처음 1회만)
+(function() {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  const hasShown = localStorage.getItem('pwa_install_hint_shown');
+  
+  if (isIOS && !isStandalone && !hasShown) {
+    setTimeout(() => {
+      const hint = document.createElement('div');
+      hint.style.cssText = 'position:fixed; bottom:90px; left:16px; right:16px; background:#191F28; color:white; padding:14px 18px; border-radius:14px; font-size:13px; line-height:1.5; z-index:300; box-shadow:0 8px 24px rgba(0,0,0,0.2); display:flex; gap:12px; align-items:flex-start;';
+      hint.innerHTML = `
+        <div style="flex:1;">
+          <div style="font-weight:700; margin-bottom:4px;">📱 홈 화면에 추가하기</div>
+          <div style="opacity:0.85; font-size:12px;">Safari 하단 공유 버튼 → "홈 화면에 추가"를 누르면 앱처럼 사용할 수 있어요</div>
+        </div>
+        <button id="hint-close" style="background:none; border:none; color:white; opacity:0.6; font-size:18px; cursor:pointer; padding:0; margin-top:-2px;">×</button>
+      `;
+      document.body.appendChild(hint);
+      document.getElementById('hint-close').addEventListener('click', () => {
+        hint.remove();
+        localStorage.setItem('pwa_install_hint_shown', '1');
+      });
+    }, 2000);
+  }
+})();
+</script>
+
+</body>
+</html>
