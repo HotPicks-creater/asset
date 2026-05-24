@@ -1,6 +1,6 @@
 {
-  "name": "정훈 자산",
-  "short_name": "정훈 자산",
+  "name": "내 자산",
+  "short_name": "내 자산",
   "description": "개인 자산 포트폴리오 관리",
   "start_url": "./",
   "scope": "./",

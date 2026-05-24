@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>정훈 자산</title>
+<title>내 자산</title>
 
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#3182F6">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="정훈 자산">
+<meta name="apple-mobile-web-app-title" content="내 자산">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
@@ -1280,7 +1280,7 @@ input, select { font-family: inherit; color: inherit; }
 
   <!-- HEADER -->
   <header class="header">
-    <div class="header-title">정훈 자산</div>
+    <div class="header-title">내 자산</div>
     <div class="header-actions">
       <button class="icon-btn" id="export-btn" aria-label="백업">↓</button>
       <button class="icon-btn" id="import-btn" aria-label="복원">↑</button>
@@ -1538,6 +1538,16 @@ input, select { font-family: inherit; color: inherit; }
     <div class="modal-desc">앱 환경을 관리합니다</div>
 
     <div class="modal-field">
+      <label class="field-label">앱 이름</label>
+      <input class="input" id="app-name-input" placeholder="내 자산" maxlength="20" />
+      <div style="font-size:11px; color:var(--text-3); margin-top:6px; font-weight:500;">헤더와 브라우저 탭에 표시됩니다</div>
+    </div>
+
+    <button class="modal-btn" id="app-name-save">앱 이름 저장</button>
+
+    <div style="height: 1px; background: var(--line-2); margin: 24px 0;"></div>
+
+    <div class="modal-field">
       <label class="field-label">환율 (USD → KRW)</label>
       <div class="input-row">
         <input class="input" type="number" id="fx-input" placeholder="1500" />
@@ -1545,7 +1555,7 @@ input, select { font-family: inherit; color: inherit; }
       </div>
     </div>
 
-    <button class="modal-btn" id="fx-save">저장</button>
+    <button class="modal-btn" id="fx-save">환율 저장</button>
 
     <div style="height: 1px; background: var(--line-2); margin: 24px 0;"></div>
 
@@ -1594,6 +1604,7 @@ let state = {
   yields: {},
   snapshots: [],
   fxRate: 1500,
+  appName: '내 자산',
   lastUpdate: null
 };
 
@@ -2699,8 +2710,26 @@ document.getElementById('manual-snap').addEventListener('click', () => {
 // ============ SETTINGS ============
 document.getElementById('settings-btn').addEventListener('click', () => {
   document.getElementById('fx-input').value = state.fxRate;
+  document.getElementById('app-name-input').value = state.appName || '내 자산';
   openModal('modal-settings');
 });
+
+document.getElementById('app-name-save').addEventListener('click', () => {
+  const v = document.getElementById('app-name-input').value.trim();
+  if (!v) { toast('앱 이름을 입력해주세요'); return; }
+  if (v.length > 20) { toast('20자 이내로 입력해주세요'); return; }
+  state.appName = v;
+  save();
+  applyAppName();
+  toast('앱 이름이 변경되었습니다');
+});
+
+function applyAppName() {
+  const name = state.appName || '내 자산';
+  document.title = name;
+  const headerTitle = document.querySelector('.header-title');
+  if (headerTitle) headerTitle.textContent = name;
+}
 
 document.getElementById('fx-save').addEventListener('click', () => {
   const v = Number(document.getElementById('fx-input').value);
@@ -2767,6 +2796,7 @@ function renderAll() {
 }
 
 load();
+applyAppName();
 renderAll();
 </script>
 
