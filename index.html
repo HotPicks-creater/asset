@@ -840,7 +840,281 @@ input, select { font-family: inherit; color: inherit; }
   font-size: 18px;
 }
 
-/* ===== TOAST ===== */
+/* ===== GOALS CARD (자산 페이지 중간) ===== */
+.goals-section {
+  margin: 24px 0 8px;
+}
+
+.goals-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 4px 12px;
+}
+
+.goals-section-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+.goals-add-btn {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blue);
+  padding: 4px 0;
+}
+
+.goal-card {
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 10px;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.goal-card:active { background: var(--surface-2); }
+
+.goal-card.achieved {
+  background: linear-gradient(135deg, #FFF8E5 0%, #FFE9B8 100%);
+  border: 1px solid #F5C957;
+}
+
+.goal-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.goal-card-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.goal-achieved-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: #F5C957;
+  color: #6B4D00;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 100px;
+  letter-spacing: 0.3px;
+}
+
+.goal-card-pct {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--blue);
+}
+
+.goal-card.achieved .goal-card-pct {
+  color: #6B4D00;
+}
+
+.goal-amounts {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-3);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.goal-amounts .current { color: var(--text); font-weight: 700; }
+
+.goal-progress-bar {
+  height: 8px;
+  background: var(--line-2);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.goal-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue) 0%, #5BA0FF 100%);
+  border-radius: 4px;
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.goal-card.achieved .goal-progress-fill {
+  background: linear-gradient(90deg, #F5C957 0%, #FFD978 100%);
+}
+
+.goal-meta {
+  font-size: 11px;
+  color: var(--text-3);
+  font-weight: 500;
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.goal-meta .remaining {
+  color: var(--text-2);
+  font-weight: 600;
+}
+
+.goal-empty {
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 28px 20px;
+  text-align: center;
+}
+
+.goal-empty-icon { font-size: 28px; margin-bottom: 6px; }
+
+.goal-empty-text {
+  font-size: 13px;
+  color: var(--text-2);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+.goal-empty-btn {
+  background: var(--blue);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* ===== CELEBRATION MODAL ===== */
+.celebration-modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  padding: 20px;
+}
+
+.celebration-modal-bg.show {
+  display: flex;
+  animation: fadeIn 0.3s ease;
+}
+
+.celebration-modal {
+  background: white;
+  border-radius: 24px;
+  padding: 40px 28px 28px;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes bounceIn {
+  from { transform: scale(0.3); opacity: 0; }
+  60% { transform: scale(1.05); }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.celebration-trophy {
+  font-size: 72px;
+  margin-bottom: 16px;
+  animation: trophyPulse 1.5s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes trophyPulse {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.1) rotate(-5deg); }
+  75% { transform: scale(1.1) rotate(5deg); }
+}
+
+.celebration-title {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, #F5C957 0%, #B8472F 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.celebration-goal-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.celebration-amount {
+  font-size: 14px;
+  color: var(--text-2);
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+
+.celebration-message {
+  background: var(--surface-2);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 13px;
+  color: var(--text-2);
+  font-weight: 500;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.celebration-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--text);
+  color: white;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* ===== CONFETTI ===== */
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -20px;
+  opacity: 0;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0.7;
+  }
+}
+
+
 .toast {
   position: fixed;
   bottom: 100px;
@@ -1309,6 +1583,14 @@ input, select { font-family: inherit; color: inherit; }
       </div>
     </div>
 
+    <div class="goals-section">
+      <div class="goals-section-header">
+        <div class="goals-section-title">저축 목표</div>
+        <button class="goals-add-btn" id="goals-add-btn">+ 목표 추가</button>
+      </div>
+      <div id="goals-container"></div>
+    </div>
+
     <div class="section-title">
       <span>보유 자산</span>
       <span class="section-action" id="holdings-count">0개</span>
@@ -1464,6 +1746,42 @@ input, select { font-family: inherit; color: inherit; }
   </div>
 </div>
 
+<!-- GOAL ADD/EDIT MODAL -->
+<div class="modal-bg" id="modal-goal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="goal-modal-title">목표 추가</div>
+    <div class="modal-desc">저축하고 싶은 목표 금액을 설정합니다</div>
+
+    <div class="modal-field">
+      <label class="field-label">목표 이름</label>
+      <input class="input" id="goal-input-name" placeholder="예: 비상금, 노트북, 유럽여행" maxlength="20" />
+    </div>
+
+    <div class="modal-field">
+      <label class="field-label">목표 금액 (원)</label>
+      <input class="input mono" type="number" inputmode="numeric" id="goal-input-amount" placeholder="0" />
+    </div>
+
+    <button class="modal-btn" id="goal-save">저장</button>
+    <div class="modal-row" id="goal-edit-actions" style="display:none; margin-top:8px;">
+      <button class="modal-btn modal-btn-danger" id="goal-delete">삭제</button>
+    </div>
+  </div>
+</div>
+
+<!-- CELEBRATION MODAL -->
+<div class="celebration-modal-bg" id="modal-celebration">
+  <div class="celebration-modal">
+    <div class="celebration-trophy">🏆</div>
+    <div class="celebration-title">목표 달성!</div>
+    <div class="celebration-goal-name" id="celebration-name">—</div>
+    <div class="celebration-amount" id="celebration-amount">—</div>
+    <div class="celebration-message" id="celebration-message">정말 대단해요! 꾸준한 노력의 결과예요 ✨</div>
+    <button class="celebration-btn" id="celebration-close">확인</button>
+  </div>
+</div>
+
 <!-- CATEGORY DETAIL MODAL -->
 <div class="modal-bg" id="modal-cat">
   <div class="modal">
@@ -1605,6 +1923,7 @@ let state = {
   snapshots: [],
   fxRate: 1500,
   appName: '내 자산',
+  goals: [],            // {id, name, amount, createdAt, celebrated}
   lastUpdate: null
 };
 
@@ -1866,6 +2185,223 @@ function renderHoldings() {
     
     container.appendChild(card);
   });
+  
+  renderGoals(); // 자산 페이지에 목표도 같이 갱신
+}
+
+// ============ GOALS ============
+let editingGoalId = null;
+
+function renderGoals() {
+  const container = document.getElementById('goals-container');
+  if (!container) return;
+  
+  const total = getTotal();
+  
+  if (state.goals.length === 0) {
+    container.innerHTML = `
+      <div class="goal-empty">
+        <div class="goal-empty-icon">🎯</div>
+        <div class="goal-empty-text">아직 설정한 목표가 없습니다<br>저축 목표를 만들어 보세요</div>
+        <button class="goal-empty-btn" onclick="openGoalAdd()">목표 만들기</button>
+      </div>`;
+    return;
+  }
+  
+  container.innerHTML = '';
+  
+  // 진행률 높은 순 정렬
+  const sorted = [...state.goals].sort((a, b) => {
+    const aPct = a.amount > 0 ? (total / a.amount) : 0;
+    const bPct = b.amount > 0 ? (total / b.amount) : 0;
+    return bPct - aPct;
+  });
+  
+  sorted.forEach(g => {
+    const pct = g.amount > 0 ? Math.min(999, (total / g.amount * 100)) : 0;
+    const isAchieved = pct >= 100;
+    const remaining = Math.max(0, g.amount - total);
+    
+    const card = document.createElement('div');
+    card.className = 'goal-card' + (isAchieved ? ' achieved' : '');
+    card.dataset.id = g.id;
+    
+    card.innerHTML = `
+      <div class="goal-card-top">
+        <div class="goal-card-name">
+          ${escapeHTML(g.name)}
+          ${isAchieved ? '<span class="goal-achieved-badge">🏆 달성</span>' : ''}
+        </div>
+        <div class="goal-card-pct">${pct.toFixed(1)}%</div>
+      </div>
+      <div class="goal-amounts">
+        <span class="current">${fmtFull(total)}원</span>
+        <span>목표 ${fmtFull(g.amount)}원</span>
+      </div>
+      <div class="goal-progress-bar">
+        <div class="goal-progress-fill" style="width:${Math.min(100, pct)}%;"></div>
+      </div>
+      <div class="goal-meta">
+        <span>${isAchieved ? '✨ 축하합니다!' : '꾸준히 모아가는 중'}</span>
+        <span class="remaining">${isAchieved ? '초과 +' + fmt(total - g.amount) + '원' : '남은 금액 ' + fmt(remaining) + '원'}</span>
+      </div>
+    `;
+    
+    card.addEventListener('click', () => openGoalEdit(g.id));
+    container.appendChild(card);
+    
+    // 달성 체크 (한 번만 축하)
+    if (isAchieved && !g.celebrated) {
+      g.celebrated = true;
+      save();
+      setTimeout(() => showCelebration(g), 400);
+    } else if (!isAchieved && g.celebrated) {
+      // 100% 미만으로 다시 떨어지면 다시 축하 가능하게
+      g.celebrated = false;
+      save();
+    }
+  });
+}
+
+function openGoalAdd() {
+  editingGoalId = null;
+  document.getElementById('goal-modal-title').textContent = '목표 추가';
+  document.getElementById('goal-input-name').value = '';
+  document.getElementById('goal-input-amount').value = '';
+  document.getElementById('goal-edit-actions').style.display = 'none';
+  document.getElementById('goal-save').textContent = '저장';
+  openModal('modal-goal');
+  setTimeout(() => document.getElementById('goal-input-name').focus(), 300);
+}
+
+function openGoalEdit(id) {
+  const g = state.goals.find(x => x.id === id);
+  if (!g) return;
+  editingGoalId = id;
+  document.getElementById('goal-modal-title').textContent = '목표 수정';
+  document.getElementById('goal-input-name').value = g.name;
+  document.getElementById('goal-input-amount').value = g.amount;
+  document.getElementById('goal-edit-actions').style.display = 'flex';
+  document.getElementById('goal-save').textContent = '수정';
+  openModal('modal-goal');
+}
+
+document.getElementById('goals-add-btn').addEventListener('click', openGoalAdd);
+
+document.getElementById('goal-save').addEventListener('click', () => {
+  const name = document.getElementById('goal-input-name').value.trim();
+  const amount = Number(document.getElementById('goal-input-amount').value);
+  if (!name) { toast('목표 이름을 입력해주세요'); return; }
+  if (!amount || amount <= 0) { toast('목표 금액을 입력해주세요'); return; }
+  
+  if (editingGoalId) {
+    const g = state.goals.find(x => x.id === editingGoalId);
+    if (g) {
+      g.name = name;
+      // 금액 변경 시 달성 상태 재평가
+      if (g.amount !== amount) {
+        g.amount = amount;
+        const total = getTotal();
+        // 목표 올라가서 미달성 됐으면 celebrated 리셋
+        if (total < amount) g.celebrated = false;
+      }
+    }
+    toast('목표가 수정되었습니다');
+  } else {
+    const total = getTotal();
+    state.goals.push({
+      id: uid(),
+      name,
+      amount,
+      createdAt: new Date().toISOString(),
+      celebrated: total >= amount // 추가 시점에 이미 달성 상태면 축하 안 띄움
+    });
+    toast('목표가 추가되었습니다');
+  }
+  
+  save();
+  renderGoals();
+  closeModal('modal-goal');
+});
+
+document.getElementById('goal-delete').addEventListener('click', () => {
+  if (!editingGoalId) return;
+  const g = state.goals.find(x => x.id === editingGoalId);
+  if (!g) return;
+  confirmDialog('목표 삭제', `"${g.name}" 목표를 삭제하시겠습니까?`, () => {
+    state.goals = state.goals.filter(x => x.id !== editingGoalId);
+    save();
+    renderGoals();
+    closeModal('modal-goal');
+    toast('삭제되었습니다');
+  });
+});
+
+// ============ CELEBRATION ============
+function showCelebration(goal) {
+  document.getElementById('celebration-name').textContent = goal.name;
+  document.getElementById('celebration-amount').textContent = '목표 ' + fmtFull(goal.amount) + '원 달성';
+  
+  // 응원 메시지 랜덤
+  const messages = [
+    '정말 대단해요! 꾸준한 노력의 결과예요 ✨',
+    '와! 목표 달성을 진심으로 축하해요 🎊',
+    '한 걸음씩 쌓아온 결과네요. 멋져요! 💪',
+    '꿈을 향해 한 발짝 더 가까워졌어요 🚀',
+    '오늘은 자축의 날이에요! 잠시 쉬어가세요 ☕'
+  ];
+  document.getElementById('celebration-message').textContent = 
+    messages[Math.floor(Math.random() * messages.length)];
+  
+  document.getElementById('modal-celebration').classList.add('show');
+  document.body.style.overflow = 'hidden';
+  
+  // 컨페티 발사
+  launchConfetti();
+}
+
+document.getElementById('celebration-close').addEventListener('click', () => {
+  document.getElementById('modal-celebration').classList.remove('show');
+  document.body.style.overflow = '';
+});
+
+document.getElementById('modal-celebration').addEventListener('click', (e) => {
+  if (e.target.id === 'modal-celebration') {
+    document.getElementById('modal-celebration').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+});
+
+function launchConfetti() {
+  const colors = ['#F5C957', '#FF9500', '#3182F6', '#00C896', '#B8472F', '#7B4FE0', '#E55A5A'];
+  const container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+  
+  // 컨페티 80개 발사
+  for (let i = 0; i < 80; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    const size = Math.random() * 8 + 6;
+    const left = Math.random() * 100;
+    const delay = Math.random() * 1.5;
+    const duration = Math.random() * 2 + 2.5;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const shape = Math.random() > 0.5 ? '50%' : '2px';
+    
+    c.style.cssText = `
+      left: ${left}%;
+      width: ${size}px;
+      height: ${size}px;
+      background: ${color};
+      border-radius: ${shape};
+      animation: confettiFall ${duration}s ${delay}s linear forwards;
+    `;
+    container.appendChild(c);
+  }
+  
+  // 5초 후 정리
+  setTimeout(() => container.remove(), 5500);
 }
 
 function getPrincipalKRW(h) {
