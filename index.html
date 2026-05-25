@@ -1722,6 +1722,12 @@ input, select { font-family: inherit; color: inherit; }
     </div>
 
     <div class="modal-field">
+      <label class="field-label">원금 <span style="font-weight:500; color:var(--text-3); font-size:12px;">(선택 · 비우면 수익률 계산 안 함)</span></label>
+      <input class="input" type="number" inputmode="numeric" id="add-principal" placeholder="0" />
+      <div id="add-return-preview" style="font-size:13px; font-weight:600; margin-top:6px; display:none;"></div>
+    </div>
+
+    <div class="modal-field">
       <label class="field-label">현재 평가액</label>
       <div class="input-row">
         <input class="input" type="number" inputmode="numeric" id="add-amount" placeholder="0" />
@@ -1731,12 +1737,6 @@ input, select { font-family: inherit; color: inherit; }
         </div>
       </div>
       <div id="add-conv" style="font-size:12px; color:var(--text-3); margin-top:6px; font-weight:500; display:none;"></div>
-    </div>
-
-    <div class="modal-field">
-      <label class="field-label">원금 <span style="font-weight:500; color:var(--text-3); font-size:12px;">(선택 · 비우면 수익률 계산 안 함)</span></label>
-      <input class="input" type="number" inputmode="numeric" id="add-principal" placeholder="0" />
-      <div id="add-return-preview" style="font-size:13px; font-weight:600; margin-top:6px; display:none;"></div>
     </div>
 
     <button class="modal-btn" id="add-save">저장</button>

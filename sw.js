@@ -1,5 +1,5 @@
 // 자산 앱 PWA Service Worker
-const CACHE_VERSION = 'asset-app-v7';
+const CACHE_VERSION = 'asset-app-v8';
 const CACHE_FILES = [
   './',
   './index.html',
